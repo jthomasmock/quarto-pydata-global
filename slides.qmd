@@ -1,6 +1,7 @@
 ---
 format: 
   revealjs:
+    include-in-header: preview.html
     hash-type: number
     transition: fade
     auto-stretch: false
