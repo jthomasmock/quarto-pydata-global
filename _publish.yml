@@ -1,0 +1,4 @@
+- source: slides.qmd
+  quarto-pub:
+    - id: 7614be6c-ffd2-4ed0-8c5d-4c43bb5d8d59
+      url: 'https://quartopub.com/sites/thomasmock/python'

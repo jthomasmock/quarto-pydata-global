@@ -1,7 +1,7 @@
 ---
 format: 
   revealjs:
-    include-in-header: preview.html
+    # include-in-header: preview.html
     hash-type: number
     transition: fade
     auto-stretch: false
@@ -708,6 +708,20 @@ format:
     margin-right: 30mm
 ```
 
+## Stored/frozen computation
+
+Jupyter natively approaches this as storing the source code, output file, and computation in a single document (`.ipynb` which is JSON).
+
+<br>
+
+. . .
+
+Quarto also provides a method but approaches differently:
+
+- Source code input (plain text `.qmd` or `.ipynb`)
+- Output file (some format like `.html` or `.pdf`)
+- Frozen computation via `freeze: true`, stored by directory and file as `.json` and other intermediary files
+
 ## Quarto Projects
 
 * A project may have multiple contributors or even languages 
@@ -758,21 +772,6 @@ execute:
 ```
 
 :::
-
-. . .
-
-Jupyter natively approaches this as storing the source code, output file, and computation in a single document (`.ipynb` which is JSON).
-
-<br>
-
-. . .
-
-Quarto also provides a method but approaches differently:
-
-- Source code input (plain text `.qmd` or `.ipynb`)
-- Output file (some format like `.html` or `.pdf`)
-- Frozen computation, stored by directory and file as `.json` and other intermediary files
-
 
 
 ## Extending Quarto with `extensions`
