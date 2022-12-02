@@ -37,6 +37,8 @@ jupyter: python3
 
 <https://quarto.org>
 
+::: {.incremental}
+
 Quarto is an open-source scientific and technical publishing system that builds on standard markdown with features essential for scientific communication.
 
 * Computations: Python, R, Julia, Observable JS
@@ -45,13 +47,19 @@ Quarto is an open-source scientific and technical publishing system that builds 
 
 Literate programming system in the tradition of Org-Mode, Weave.jl, R Markdown, iPyPublish, Jupyter Book, etc.
 
+:::
+
 ## Origins
+
+::: {.incremental}
 
 * Open Source project sponsored by Posit, PBC (formerly known as RStudio, PBC)
 * 10 years of experience with R Markdown, a similar system that was R-specific, convinced us that the core ideas were sound
 * The number of languages and runtimes used for scientific discourse is broad
 * Quarto is a ground-up re-imagining of R Markdown that is fundamentally multi-language and multi-engine
 * Quarto gets inspiration from both R Markdown and Jupyter, and provides a plain-text option or the use of native Jupyter notebooks
+
+:::
 
 ## Goal: Computation document
 
@@ -126,12 +134,12 @@ Can be rendered to dozens of output formats with Quarto (via Pandoc):
 ::: {style="font-size: 70px;"}
 
 ```bash
-quarto render hello.qmd --to html
-quarto render hello.qmd --to pdf
-quarto render hello.qmd --to docx
-quarto render hello.qmd --to epub
-quarto render hello.qmd --to pptx
-quarto render hello.qmd --to revealjs
+$ quarto render hello.qmd --to html
+$ quarto render hello.qmd --to pdf
+$ quarto render hello.qmd --to docx
+$ quarto render hello.qmd --to epub
+$ quarto render hello.qmd --to pptx
+$ quarto render hello.qmd --to revealjs
 ```
 
 :::
@@ -230,6 +238,61 @@ Commands:
   preview [file] [args...]  - Render and preview a document or website project.          
   publish [provider] [path] - Publish a document or project.
 ```
+
+:::
+
+## Basic Workflow
+
+Rendering (execute and write to disk):
+
+```bash
+# plain text qmd
+$ quarto render python.qmd
+$ quarto render python.qmd --to pdf
+
+# ipynb notebook
+$ quarto render python.ipynb
+$ quarto render python.ipynb --execute
+```
+
+. . .
+
+Preview (execute, write to disk, and maintain a LIVE preview of content):
+
+```bash
+# plain text qmd
+$ quarto preview python.qmd
+$ quarto preview python.qmd --to pdf
+
+# ipynb notebook
+$ quarto preview python.ipynb
+$ quarto preview python.ipynb --execute
+```
+
+
+## IPython
+
+For execution of R, Quarto uses `knitr` as the engine, but for Python Quarto natively executes Python with Jupyter kernels such as IPython.
+
+::: {.incremental}
+
+* The indicated or default Python Jupyter kernel is bound automatically when `{python}` executable cells are present. You can set a specific kernel via the YAML:
+
+::: {.fragment}
+
+```yaml
+---
+title: "My doc"
+date: today
+jupyter: python3
+---
+```
+
+:::
+
+* IPython executes Python code and transforms it to plain text, graphics, markdown, HTML, etc.
+
+* For interactive sessions, Quarto keeps the Jupyter Kernel resident as a daemon to mitigate startup times.
 
 :::
 
@@ -337,7 +400,7 @@ You can keep using them! [You get to choose whether to use the stored computatio
 
 ::: {style="font-size:75px;"}
 ``` bash
-# --execute command optional - ignore stored computation
+# --execute flag is optional - forces re-execution
 quarto render my-favorite.ipynb --to html --execute
 ```
 :::
@@ -345,14 +408,13 @@ quarto render my-favorite.ipynb --to html --execute
 
 <br>
 
-Quarto can help convert back and forth between plain text `.qmd` and `.ipynb`:
+Quarto can help convert back and forth between plain text `.qmd` and `.ipynb` - kind of like `jupytext` but specific to Quarto:
 
 ::: {style="font-size:50px;"}
 ```bash
 quarto convert --help
 
 Usage:   quarto convert <input>
-
 Description:
     Convert documents to alternate representations.
 
@@ -360,8 +422,8 @@ Convert notebook to markdown:                quarto convert doc.ipynb
 Convert markdown to notebook:                quarto convert doc.qmd                  
 Convert notebook to markdown, write to file: quarto convert doc.ipynb --output doc.qmd
 ```
-:::
 
+:::
 
 ## nbdev + Quarto = super powers
 
@@ -384,7 +446,6 @@ Convert notebook to markdown, write to file: quarto convert doc.ipynb --output d
 :::
 
 ::::
-
 
 ## Comfort of your own workspace
 
@@ -421,6 +482,145 @@ Both RStudio and [VSCode with the Quarto extension](https://quarto.org/docs/tool
 :::
 
 ::::
+
+## Quarto, unified document layout
+
+::: {style="font-size: 95px;"}
+
+```bash
+quarto render boston-terrier.qmd --to html
+```
+
+:::
+
+
+. . .
+
+::: {style="font-size: 95px;"}
+
+```bash
+quarto render boston-terrier.qmd --to pdf
+```
+
+:::
+
+#
+
+:::: {.columns style="margin-top: -50px;"}
+
+::: {.column width="45%"}
+
+![HTML](images/boston-history-html.jpeg){fig-alt="A screenshot of a HTML article about Boston Terriers, the document has an image in the right hard margin, a floating table of contents, and different sections split up by headers"}
+
+:::
+
+::: {.column .fragment width="50%"}
+
+![PDF](images/boston-history-pdf.jpeg){fig-alt="A screenshot of a PDF article about Boston Terriers, the document has an image in the right hard margin, a floating table of contents, and different sections split up by headers"}
+
+:::
+
+::::
+
+## Quarto, unified syntax
+
+Quarto focuses on enhancing Pandoc-flavored markdown to provide common workflows and syntax across vastly different formats (PDF vs HTML vs docx vs Epub vs reveal.js vs pptx)
+
+:::: {.columns}
+
+::: {.column width="50%" .fragment}
+
+Say hello to "fenced divs":
+
+
+```code
+::: {.class}
+... content ...
+:::
+```
+
+:::
+
+::: {.column width="50%" .fragment}
+And to [bracketed spans]{.fragment}
+
+
+
+::: {.fragment}
+
+```code
+And to [bracketed spans]{.fragment}
+```
+
+:::
+
+:::
+
+::::
+
+
+## Quarto, unified syntax
+
+This syntax also applies across code-chunks
+
+:::: {.columns}
+
+::: {.column width="40%" .fragment}
+
+```markdown
+::: {layout-ncol=2}
+![](image1.png)
+
+![](image2.png)
+:::
+```
+
+:::
+
+::: {.column width="60%" .fragment}
+
+```{python}
+#| echo: fenced
+#| layout-ncol: 2
+
+from plotnine import ggplot, geom_point, geom_boxplot, aes, stat_smooth, facet_wrap, theme
+from plotnine.data import mtcars
+
+# plot 1 in column 1
+plot1 = (ggplot(mtcars, aes('wt', 'mpg', color='factor(gear)'))
+   + geom_point() + stat_smooth(method='lm')
+   + facet_wrap('~gear')).draw(show=True)
+
+# plot 2 in column 2
+plot2 = (ggplot(mtcars, aes('cyl', 'mpg', color='factor(cyl)'))
++ geom_boxplot()
+ ).draw(show=True)
+```
+
+:::
+
+::::
+
+
+## Built-in vs custom
+
+One goal of Quarto is to provide a markdown-centric format-agnostic syntax as shown in previous slides. 
+
+. . .
+
+* Quarto bundles Bootstrap CSS and themes, and respects SASS variables for robust styling of HTML content (HTML documents, websites, books, slides, etc).
+* Quarto includes LaTeX templates for specific journals as well as good defaults for PDF outputs in general.
+* Quarto respects docx and pptx templates, again allowing for robust styling.
+
+. . .
+
+* You shouldn't HAVE to escape out to writing raw LaTeX, HTML, Jinja templates, etc
+* In vast majority of situations, can rely purely on Markdown syntax
+
+. . .
+
+* BUT you can always include raw content such as LaTeX, CSS, HTML, JavaScript to further customize and optimize for a specific format.
+
 
 ## Interactivity with Jupyter Widgets
 
@@ -525,144 +725,6 @@ Celsius = ${d3.format(".0f")(temp)}&#x2103; and Fahrenheit = ${d3.format(".1f")(
 
 ````
 
-## Quarto, unified document layout
-
-::: {style="font-size: 105px;"}
-
-```bash
-quarto render boston-terrier.qmd --to html
-```
-
-:::
-
-
-. . .
-
-::: {style="font-size: 105px;"}
-
-```bash
-quarto render boston-terrier.qmd --to pdf
-```
-
-:::
-
-#
-
-:::: {.columns style="margin-top: -50px;"}
-
-::: {.column width="45%"}
-
-![HTML](images/boston-history-html.jpeg){fig-alt="A screenshot of a HTML article about Boston Terriers, the document has an image in the right hard margin, a floating table of contents, and different sections split up by headers"}
-
-:::
-
-::: {.column .fragment width="50%"}
-
-![PDF](images/boston-history-pdf.jpeg){fig-alt="A screenshot of a PDF article about Boston Terriers, the document has an image in the right hard margin, a floating table of contents, and different sections split up by headers"}
-
-:::
-
-::::
-
-## Quarto, unified syntax
-
-:::: {.columns}
-
-::: {.column width="50%" .fragment}
-
-Say hello to "fenced divs":
-
-
-```code
-::: {.class}
-... content ...
-:::
-```
-
-:::
-
-::: {.column width="50%" .fragment}
-And to [bracketed spans]{.fragment}
-
-
-
-::: {.fragment}
-
-```code
-And to [bracketed spans]{.fragment}
-```
-
-:::
-
-:::
-
-::::
-
-. . .
-
-Quarto uses these to apply common syntax across formats (PDF, HTML, docx, pptx, etc)!
-
-## Quarto, unified syntax
-
-This syntax also applies across code-chunks
-
-:::: {.columns}
-
-::: {.column width="40%" .fragment}
-
-```markdown
-::: {layout-ncol=2}
-![](image1.png)
-
-![](image2.png)
-:::
-```
-
-:::
-
-::: {.column width="60%" .fragment}
-
-```{python}
-#| echo: fenced
-#| layout-ncol: 2
-
-from plotnine import ggplot, geom_point, geom_boxplot, aes, stat_smooth, facet_wrap, theme
-from plotnine.data import mtcars
-
-# plot 1 in column 1
-plot1 = (ggplot(mtcars, aes('wt', 'mpg', color='factor(gear)'))
-   + geom_point() + stat_smooth(method='lm')
-   + facet_wrap('~gear')).draw(show=True)
-
-# plot 2 in column 2
-plot2 = (ggplot(mtcars, aes('cyl', 'mpg', color='factor(cyl)'))
-+ geom_boxplot()
- ).draw(show=True)
-```
-
-:::
-
-::::
-
-
-## Built-in vs custom
-
-One goal of Quarto is to provide a markdown-centric format-agnostic syntax as shown in previous slides. 
-
-. . .
-
-* Quarto bundles Bootstrap CSS and themes, and respects SASS variables for robust styling of HTML content (HTML documents, websites, books, slides, etc).
-* Quarto includes LaTeX templates for specific journals as well as good defaults for PDF outputs in general.
-
-. . .
-
-* You shouldn't HAVE to escape out to writing raw LaTeX, HTML, Jinja templates, etc
-* In vast majority of situations, can rely purely on Markdown syntax
-
-. . .
-
-* BUT you can always include raw content such as LaTeX, CSS, HTML, JavaScript to further customize and optimize for a specific format.
-
 ## Quarto Projects + Freeze
 
 ::: {.incremental}
@@ -710,7 +772,7 @@ format:
 
 ## Stored/frozen computation
 
-Jupyter natively approaches this as storing the source code, output file, and computation in a single document (`.ipynb` which is JSON).
+Jupyter natively approaches this as storing the source code, output file, and computation in a single document (`.ipynb` which is JSON) and/or a Jupyter Cache.
 
 <br>
 
@@ -720,7 +782,7 @@ Quarto also provides a method but approaches differently:
 
 - Source code input (plain text `.qmd` or `.ipynb`)
 - Output file (some format like `.html` or `.pdf`)
-- Frozen computation via `freeze: true`, stored by directory and file as `.json` and other intermediary files
+- Frozen computation via `freeze: true`, stored by directory and file as `.json` alongside other intermediary files
 
 ## Quarto Projects
 
@@ -752,6 +814,7 @@ Quarto also provides a method but approaches differently:
 │   └── hyperparemeter-tuning
 │      └── execute-results
 │          └── out.json
+├── requirements.txt
 ```
 
 ## Quarto Projects
@@ -765,7 +828,7 @@ Quarto also provides a method but approaches differently:
 ```yaml
 execute:
   freeze: true  # never re-render during project render
-                # unless explicitly call render on THAT file
+                # unless explicitly quarto render on THAT file
 
 execute:
   freeze: auto  # re-render only when source changes
@@ -879,14 +942,14 @@ Follow [\@quarto_pub](https://twitter.com/quarto_pub) or me [\@thomas_mock](http
 
 . . .
 
-<br>
-
 ### Web resources
 
 :::{style="font-size: 40px;"}
 
 -   [Quarto.org](https://quarto.org/) for documentation or the [Quarto FAQ](https://quarto.org/docs/faq/)
 -   [Get Started with Quarto + Python](https://quarto.org/docs/get-started/)
+
+![](images/get-started.png)
 
 :::
 
