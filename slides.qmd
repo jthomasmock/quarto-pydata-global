@@ -127,6 +127,22 @@ plt.show()
 
 ::::
 
+. . .
+
+::: {style="position: absolute; top: 92px; left: 10px; width: 700px; height: 195px; background-color: #44709950; z-index: -1; border-radius: 5px;"}
+:::
+
+. . .
+
+::: {style="position: absolute; top: 315px; left: 10px; width: 700px; height: 60px; background-color: #72994E50; z-index: -1; border-radius: 5px;"}
+:::
+
+. . .
+
+::: {style="position: absolute; top: 380px; left: 10px; width: 700px; height: 475px; background-color: #EE633150; z-index: -1; border-radius: 5px;"}
+:::
+
+
 ## Simple Example, multi-format
 
 <br>
@@ -302,7 +318,7 @@ jupyter: python3
 
 ## Stored/frozen computation and reproducibility
 
-1. Jupyter natively approaches this as storing the source code, output file, and optionally cache the resulting computation in a single document (`.ipynb` which is JSON)
+1. Jupyter natively approaches this as storing the source code, output file, and cache the resulting computation in a single document (`.ipynb` which is JSON)
 
 . . .
 
@@ -314,7 +330,7 @@ jupyter: python3
 
 - Source code input (plain text `.qmd` and/or `.ipynb`)
 - Complete output file (some format like `.html` or `.pdf`)
-- Frozen computation stored separately by directory and file as `.json`, allows for permanately saving and re-use of computational outputs.
+- Frozen computation stored separately by directory and file as `.json`, allows for permanately saving and re-use of computational outputs across _entire project_.
 
 ## A `.qmd` is a plain text file
 
@@ -524,7 +540,7 @@ quarto render boston-terrier.qmd --to pdf
 
 :::
 
-#
+##
 
 :::: {.columns style="margin-top: -50px;"}
 
@@ -825,9 +841,9 @@ Follow [\@quarto_pub](https://twitter.com/quarto_pub) [#QuartoPub]{style="color:
 :::{style="font-size: 40px;"}
 
 -   [Quarto.org](https://quarto.org/) for documentation or the [Quarto FAQ](https://quarto.org/docs/faq/)
--   [Get Started with Quarto + Python](https://quarto.org/docs/get-started/)
+-   [Get Started with Quarto + Python](https://quarto.org/docs/get-started/) 
 
-![](images/get-started.png)
+![](images/get-started.png){.absolute left=20 bottom=-15}
 
 :::
 
