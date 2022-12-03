@@ -5,7 +5,7 @@ format:
     hash-type: number
     transition: fade
     auto-stretch: false
-    embed-resources: true
+    # embed-resources: true
     height: 900
     width: 1600
     logo: https://www.rstudio.com/assets/img/posit-logo-fullcolor-TM.svg
@@ -13,6 +13,8 @@ format:
     slide-number: c/t
     theme: [styles.scss]
 jupyter: python3
+execute: 
+  freeze: true
 ---
 
 ##  {#TitleSlide data-menu-title="TitleSlide" background-color="#303436" background-image="images/hamlet-quarto.jpeg" background-position="left" background-size="contain"}
@@ -45,9 +47,11 @@ Quarto is an open-source scientific and technical publishing system that builds 
 * Markdown: Pandoc flavored markdown with many enhancements
 * Output: Documents, presentations, websites, books, blogs
 
-Literate programming system in the tradition of Org-Mode, Weave.jl, R Markdown, iPyPublish, Jupyter Book, etc.
-
 :::
+
+. . .
+
+Literate programming system in the tradition of Org-Mode, Weave.jl, R Markdown, iPyPublish, Jupyter Book, etc.
 
 ## Origins
 
@@ -278,7 +282,7 @@ For execution of R, Quarto uses `knitr` as the engine, but for Python Quarto nat
 
 * The indicated or default Python Jupyter kernel is bound automatically when `{python}` executable cells are present. You can set a specific kernel via the YAML:
 
-::: {.fragment}
+::: {.fragment style="font-size: 70px;"}
 
 ```yaml
 ---
@@ -295,6 +299,22 @@ jupyter: python3
 * For interactive sessions, Quarto keeps the Jupyter Kernel resident as a daemon to mitigate startup times.
 
 :::
+
+## Stored/frozen computation and reproducibility
+
+1. Jupyter natively approaches this as storing the source code, output file, and optionally cache the resulting computation in a single document (`.ipynb` which is JSON)
+
+. . .
+
+2. [Jupyter Cache](https://jupyter-cache.readthedocs.io/en/latest/) provides transient caching of cell outputs for a doc (if any cells in doc change, then all of the cells will be re-executed)
+
+. . .
+
+3. Quarto's [Freeze](https://quarto.org/docs/projects/code-execution.html) feature uses a multi-file approach:
+
+- Source code input (plain text `.qmd` and/or `.ipynb`)
+- Complete output file (some format like `.html` or `.pdf`)
+- Frozen computation stored separately by directory and file as `.json`, allows for permanately saving and re-use of computational outputs.
 
 ## A `.qmd` is a plain text file
 
@@ -522,66 +542,34 @@ quarto render boston-terrier.qmd --to pdf
 
 ::::
 
-## Quarto, unified syntax
-
-Quarto focuses on enhancing Pandoc-flavored markdown to provide common workflows and syntax across vastly different formats (PDF vs HTML vs docx vs Epub vs reveal.js vs pptx)
-
-:::: {.columns}
-
-::: {.column width="50%" .fragment}
-
-Say hello to "fenced divs":
-
-
-```code
-::: {.class}
-... content ...
-:::
-```
-
-:::
-
-::: {.column width="50%" .fragment}
-And to [bracketed spans]{.fragment}
-
-
-
-::: {.fragment}
-
-```code
-And to [bracketed spans]{.fragment}
-```
-
-:::
-
-:::
-
-::::
-
-
-## Quarto, unified syntax
-
-This syntax also applies across code-chunks
+## Quarto, unified syntax across markdown and code
 
 :::: {.columns}
 
 ::: {.column width="40%" .fragment}
 
+Add two images on disk to a two column layout.
+
 ```markdown
 ::: {layout-ncol=2}
-![](image1.png)
+![Surus](surus.png)
 
-![](image2.png)
+![Hanno](hanno.png)
 :::
 ```
+
+![](https://quarto.org/docs/authoring/images/elephant-figures-no-subcaption.png)
 
 :::
 
 ::: {.column width="60%" .fragment}
 
+Generate two plots from code, and layout in two columns.
+
 ```{python}
 #| echo: fenced
 #| layout-ncol: 2
+#| fig-cap: ["Scatter", "Boxplot"]
 
 from plotnine import ggplot, geom_point, geom_boxplot, aes, stat_smooth, facet_wrap, theme
 from plotnine.data import mtcars
@@ -622,7 +610,60 @@ One goal of Quarto is to provide a markdown-centric format-agnostic syntax as sh
 * BUT you can always include raw content such as LaTeX, CSS, HTML, JavaScript to further customize and optimize for a specific format.
 
 
-## Interactivity with Jupyter Widgets
+## Extending Quarto with `extensions`
+
+:::: {.columns}
+
+::: {.column width="50%"}
+
+
+::: {.fragment}
+### Shortcodes
+
+- Replace inline "short codes" with output.
+
+``` {.markdown shortcodes="false"}
+{{< fa thumbs-up >}} 
+```
+
+{{< fa thumbs-up size=2xl >}}
+
+:::
+<br>
+
+:::  {.fragment}
+### Filters
+
+- Affect rendering of specific items
+
+![](https://user-images.githubusercontent.com/104391/178159800-e3b74510-97e7-469c-87cf-b49cac8602f9.png){width=800 fig-alt="A screenshot of a code chunk"}
+
+:::
+
+:::
+
+::: {.column width="50%"}
+
+::: {.fragment}
+
+### Formats
+
+- Add entirely custom new formats 
+
+```yaml
+---
+title: "Cool Company 2022 Presentation"
+format: coolco-revealjs
+---
+```
+
+:::
+
+:::
+
+::::
+
+## Interactivity, Jupyter Widgets
 
 ```{python}
 #| eval: true
@@ -700,7 +741,9 @@ filtered = data.filter(function(penguin) {
 })
 ```
 
-## Quarto, also with Observable Javascript!
+## Interactivity, on the fly Observable "widgets"
+
+Quarto including Observable means you can create new "widgets" or allow the user to modify portions of the doc on the fly.
 
 . . .
 
@@ -724,171 +767,6 @@ Converting temperature from &#x2103; to &#x2109; <br>
 Celsius = ${d3.format(".0f")(temp)}&#x2103; and Fahrenheit = ${d3.format(".1f")(temp * 9/5 + 32)}&#x2109;.
 
 ````
-
-## Quarto Projects + Freeze
-
-::: {.incremental}
-
-Quarto projects are directories that provide:
-
-- A way to render all or some of the files in a directory with a single command (e.g. quarto render myproject).
-
-- A way to share YAML configuration across multiple documents.
-
-- The ability to redirect output artifacts to another directory.
-
-- The ability to **freeze rendered output** (i.e. don’t re-execute documents unless they have changed).
-
-:::
-
-## Quarto Projects
-
-Controlled via a `_quarto.yml` config file.
-
-A `_quarto.yml` file might look like:
-
-```yaml
-# define as project, set output directory
-project:
-  output-dir: _output
-
-# add global YAML options
-toc: true
-number-sections: true
-bibliography: references.bib  
-  
-# define the multi-formats that will be rendered
-format:
-  # HTML w/ specific css
-  html:
-    css: styles.css
-    html-math-method: katex
-  # PDF with specific sizing
-  pdf:
-    documentclass: report
-    margin-left: 30mm
-    margin-right: 30mm
-```
-
-## Stored/frozen computation
-
-Jupyter natively approaches this as storing the source code, output file, and computation in a single document (`.ipynb` which is JSON) and/or a Jupyter Cache.
-
-<br>
-
-. . .
-
-Quarto also provides a method but approaches differently:
-
-- Source code input (plain text `.qmd` or `.ipynb`)
-- Output file (some format like `.html` or `.pdf`)
-- Frozen computation via `freeze: true`, stored by directory and file as `.json` alongside other intermediary files
-
-## Quarto Projects
-
-* A project may have multiple contributors or even languages 
-* Quarto projects can render different documents in their respective languages (R, Python, Julia, JavaScript or raw markdown).
-
-<br>
-
-```{python}
-#| eval: false
-#| echo: true
-#| code-line-numbers: 1|2|3-6|7-11|12-15|16-20
-├── _quarto.yml #<- define a Quarto project
-├── .venv #<- use a python virtual env 
-├── exploratory
-│   ├── eda.ipynb
-│   ├── dplyr-summary.qmd
-│   └── plotnine-plots.qmd
-├── hyperparameter-tuning
-│   ├── grid-define.qmd
-│   ├── torch-train.ipynb
-│   ├── vetiver-pin.qmd
-│   └── vetiver-deploy.py
-├── plots
-│   ├── density-plot.png
-│   ├── roc-curve.png
-│   └── accuracy-vs-grid.png
-├── _freeze #<- frozen output stored for specific content
-│   └── hyperparemeter-tuning
-│      └── execute-results
-│          └── out.json
-├── requirements.txt
-```
-
-## Quarto Projects
-
-> Freeze is generally used when you have either a large number of collaborators or many computational documents created over a longer period of time.
-
-. . .
-
-::: {style="font-size: 70px;"}
-
-```yaml
-execute:
-  freeze: true  # never re-render during project render
-                # unless explicitly quarto render on THAT file
-
-execute:
-  freeze: auto  # re-render only when source changes
-```
-
-:::
-
-
-## Extending Quarto with `extensions`
-
-:::: {.columns}
-
-::: {.column width="50%"}
-
-
-::: {.fragment}
-### Shortcodes
-
-- Replace inline "short codes" with output.
-
-``` {.markdown shortcodes="false"}
-{{< fa thumbs-up >}} 
-```
-
-{{< fa thumbs-up size=2xl >}}
-
-:::
-<br>
-
-:::  {.fragment}
-### Filters
-
-- Affect rendering of specific items
-
-![](https://user-images.githubusercontent.com/104391/178159800-e3b74510-97e7-469c-87cf-b49cac8602f9.png){width=800 fig-alt="A screenshot of a code chunk"}
-
-:::
-
-:::
-
-::: {.column width="50%"}
-
-::: {.fragment}
-
-### Formats
-
-- Add entirely custom new formats 
-
-```yaml
----
-title: "Cool Company 2022 Presentation"
-format: coolco-revealjs
----
-```
-
-:::
-
-:::
-
-::::
 
 ## Quarto Publish
 
@@ -938,7 +816,7 @@ Here is the [full contributors list](https://github.com/quarto-dev/quarto-cli/gr
 - Choose your own editor for plain text .qmd or Jupyter notebooks
 - Quarto projects + freeze for managing stored computation
 
-Follow [\@quarto_pub](https://twitter.com/quarto_pub) or me [\@thomas_mock](https://twitter.com/thomas_mock) on Twitter/Mastodon to stay up to date!
+Follow [\@quarto_pub](https://twitter.com/quarto_pub) [#QuartoPub]{style="color: #447099;"} or me [\@thomas_mock](https://twitter.com/thomas_mock) on Twitter/Fosstodon.org to stay up to date!
 
 . . .
 
